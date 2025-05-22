@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>勤怠管理</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    #logTable td, #logTable th { padding: 6px 10px; border: 1px solid #ccc; }
+    #logTable { border-collapse: collapse; margin: auto; width: 100%; max-width: 600px; }
+    .filter, .csv-buttons, .controls { margin: 10px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1 id="datetime"></h1>
+    <button onclick="toggleAttendance()">
+      出勤 / 退勤
+    </button>
+    <div class="csv-buttons">
+      <input type="file" accept=".csv" onchange="importCSV(event)">
+      <button onclick="exportCSV()">CSVエクスポート</button>
+    </div>
+    <div class="filter">
+      <input type="date" id="filterDate" onchange="filterByDate()">
+      <button onclick="resetFilter()">全件表示</button>
+    </div>
+    <table id="logTable"></table>
+  </main>
+  <footer>
+    <button onclick="location.href='menu.html'">メニューに戻る</button>
+  </footer>
+  <script>
+    let logs = JSON.parse(localStorage.getItem('attendanceLogs') || '[]');
+    let lastTime = null;
+
+    function updateTime() {
+      const now = new Date();
+      const f = n => n.toString().padStart(2, '0');
+      document.getElementById('datetime').textContent =
+        now.getFullYear() + '/' + f(now.getMonth() + 1) + '/' + f(now.getDate()) + ' ' +
+        f(now.getHours()) + ':' + f(now.getMinutes()) + ':' + f(now.getSeconds());
+    }
+    setInterval(updateTime, 1000);
+
+    function toggleAttendance() {
+      const now = new Date();
+      if (!lastTime) {
+        lastTime = now;
+        alert('出勤時間を記録しました。');
+      } else {
+        const duration = ((now - lastTime) / (1000 * 60)).toFixed(1);
+        logs.push({ date: new Date().toISOString(), start: lastTime, end: now, duration });
+        lastTime = null;
+        localStorage.setItem('attendanceLogs', JSON.stringify(logs));
+        renderLogs();
+      }
+    }
+
+    function renderLogs(data = logs) {
+      const table = document.getElementById('logTable');
+      table.innerHTML = '<tr><th>日付</th><th>出勤</th><th>退勤</th><th>勤務時間(分)</th><th>操作</th></tr>';
+      data.forEach((log, i) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${log.date.split('T')[0]}</td><td>${new Date(log.start).toLocaleTimeString()}</td><td>${new Date(log.end).toLocaleTimeString()}</td><td>${log.duration}</td>
+        <td><button onclick="deleteLog(${i})">削除</button></td>`;
+        table.appendChild(tr);
+      });
+    }
+
+    function deleteLog(index) {
+      logs.splice(index, 1);
+      localStorage.setItem('attendanceLogs', JSON.stringify(logs));
+      renderLogs();
+    }
+
+    function filterByDate() {
+      const val = document.getElementById('filterDate').value;
+      const filtered = logs.filter(log => log.date.startsWith(val));
+      renderLogs(filtered);
+    }
+
+    function resetFilter() {
+      renderLogs();
+    }
+
+    function exportCSV() {
+      const csv = logs.map(l => [l.date, l.start, l.end, l.duration].join(',')).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'attendance.csv';
+      a.click();
+    }
+
+    function importCSV(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const lines = e.target.result.split('\n');
+        logs = lines.map(line => {
+          const [date, start, end, duration] = line.split(',');
+          return { date, start, end, duration };
+        });
+        localStorage.setItem('attendanceLogs', JSON.stringify(logs));
+        renderLogs();
+      };
+      reader.readAsText(file);
+    }
+
+    renderLogs();
+  </script>
+</body>
+</html>
