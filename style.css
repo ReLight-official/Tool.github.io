@@ -1,83 +1,61 @@
-/* 全体の基本設定 */
 body {
-    font-family: "Helvetica Neue", sans-serif;
-    background-color: #f9f9f9;
-    color: #333;
-    margin: 0;
-    padding: 0;
-    line-height: 1.6;
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f0f0f0;
 }
 
-/* ヘッダー */
-header {
-    background-color: #004080;
-    color: white;
-    padding: 1rem;
-    text-align: center;
-}
-
-/* ナビゲーション */
-nav {
-    background-color: #003366;
-    color: white;
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    padding: 1rem 0;
-}
-
-nav a {
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-nav a:hover {
-    text-decoration: underline;
-}
-
-/* メインコンテンツ */
 main {
+  padding: 20px;
+  text-align: center;
+}
+
+.centered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  margin: 5px;
+  cursor: pointer;
+}
+
+footer {
+  margin-top: 40px;
+  text-align: center;
+}
+
+/* --- レスポンシブ対応 --- */
+
+/* スマホ向け（～599px） */
+@media (max-width: 599px) {
+  main {
+    padding: 10px;
+  }
+  button {
+    width: 100%;
+    font-size: 14px;
+    padding: 12px;
+  }
+}
+
+/* タブレット向け（600px～991px） */
+@media (min-width: 600px) and (max-width: 991px) {
+  button {
+    width: auto;
+    font-size: 15px;
+  }
+}
+
+/* PC向け（992px～） */
+@media (min-width: 992px) {
+  main {
     max-width: 800px;
     margin: auto;
-    padding: 2rem;
-    background-color: white;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-/* フッター */
-footer {
-    background-color: #004080;
-    color: white;
-    text-align: center;
-    padding: 1rem;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-}
-
-/* ボタン */
-button {
-    background-color: #007bff;
-    border: none;
-    padding: 0.6rem 1.2rem;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-
-/* レスポンシブ対応 */
-@media screen and (max-width: 600px) {
-    nav {
-        flex-direction: column;
-        gap: 1rem;
-    }
-
-    main {
-        padding: 1rem;
-    }
+  }
 }
