@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -14,9 +15,7 @@
 <body>
   <main>
     <h1 id="datetime"></h1>
-    <button onclick="toggleAttendance()">
-      出勤 / 退勤
-    </button>
+    <button onclick="toggleAttendance()">出勤 / 退勤</button>
     <div class="csv-buttons">
       <input type="file" accept=".csv" onchange="importCSV(event)">
       <button onclick="exportCSV()">CSVエクスポート</button>
@@ -32,7 +31,7 @@
   </footer>
   <script>
     let logs = JSON.parse(localStorage.getItem('attendanceLogs') || '[]');
-    let lastTime = null;
+    let lastTime = localStorage.getItem('lastClockIn') ? new Date(localStorage.getItem('lastClockIn')) : null;
 
     function updateTime() {
       const now = new Date();
@@ -47,11 +46,13 @@
       const now = new Date();
       if (!lastTime) {
         lastTime = now;
+        localStorage.setItem('lastClockIn', lastTime.toISOString());
         alert('出勤時間を記録しました。');
       } else {
         const duration = ((now - lastTime) / (1000 * 60)).toFixed(1);
         logs.push({ date: new Date().toISOString(), start: lastTime, end: now, duration });
         lastTime = null;
+        localStorage.removeItem('lastClockIn');
         localStorage.setItem('attendanceLogs', JSON.stringify(logs));
         renderLogs();
       }
@@ -85,7 +86,7 @@
     }
 
     function exportCSV() {
-      const csv = logs.map(l => [l.date, l.start, l.end, l.duration].join(',')).join('\n');
+      const csv = logs.map(l => [l.date, l.start, l.end, l.duration].join(',')).join('\\n');
       const blob = new Blob([csv], { type: 'text/csv' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
@@ -98,7 +99,7 @@
       if (!file) return;
       const reader = new FileReader();
       reader.onload = function(e) {
-        const lines = e.target.result.split('\n');
+        const lines = e.target.result.split('\\n');
         logs = lines.map(line => {
           const [date, start, end, duration] = line.split(',');
           return { date, start, end, duration };
