@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>リンク検索</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .suggestions { border: 1px solid #ccc; max-height: 150px; overflow-y: auto; background: white; }
+    .suggestion-item { padding: 10px; cursor: pointer; }
+    .suggestion-item:hover { background: #eee; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>リンク検索</h1>
+    <input type="text" id="searchInput" placeholder="キーワードを入力">
+    <div id="suggestions"></div>
+    <button onclick="search()">検索</button>
+    <div id="results"></div>
+  </main>
+  <footer>
+    <button onclick="location.href='menu.html'">メニューに戻る</button>
+  </footer>
+  <script>
+    const sites = [
+      { name: 'アニメイトタイムズ', url: 'https://www.animatetimes.com/' },
+      { name: 'アニフォリオ', url: 'https://anifolio.app/' },
+      { name: '声優データベース', url: 'https://www.voicedb.net/' },
+      { name: 'アニメ映画.com', url: 'https://anime.eiga.com/' }
+    ];
+    const input = document.getElementById('searchInput');
+    const suggestionsBox = document.getElementById('suggestions');
+    const resultsBox = document.getElementById('results');
+
+    input.addEventListener('input', () => {
+      const value = input.value.toLowerCase();
+      suggestionsBox.innerHTML = '';
+      if (value) {
+        sites.filter(site => site.name.toLowerCase().includes(value))
+          .forEach(site => {
+            const div = document.createElement('div');
+            div.className = 'suggestion-item';
+            div.textContent = site.name;
+            div.onclick = () => { input.value = site.name; suggestionsBox.innerHTML = ''; search(); };
+            suggestionsBox.appendChild(div);
+          });
+      }
+    });
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        suggestionsBox.innerHTML = '';
+        search();
+      }
+    });
+
+    function search() {
+      const keyword = input.value.toLowerCase();
+      resultsBox.innerHTML = '';
+      const matched = sites.filter(site => site.name.toLowerCase().includes(keyword));
+      matched.forEach(site => {
+        const btn = document.createElement('button');
+        btn.textContent = `${site.name} を開く`;
+        btn.onclick = () => window.open(site.url, '_blank');
+        resultsBox.appendChild(btn);
+      });
+      if (matched.length === 0) {
+        resultsBox.innerHTML = '<p>該当するサイトが見つかりませんでした。</p>';
+      }
+    }
+  </script>
+</body>
+</html>
