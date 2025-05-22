@@ -4,10 +4,12 @@ body {
   padding: 0;
   background: #f0f0f0;
 }
+
 main {
   padding: 20px;
   text-align: center;
 }
+
 .centered {
   display: flex;
   flex-direction: column;
@@ -15,13 +17,45 @@ main {
   justify-content: center;
   height: 100vh;
 }
+
 button {
   padding: 10px 20px;
   font-size: 16px;
   margin: 5px;
   cursor: pointer;
 }
+
 footer {
   margin-top: 40px;
   text-align: center;
+}
+
+/* --- レスポンシブ対応 --- */
+
+/* スマホ向け（～599px） */
+@media (max-width: 599px) {
+  main {
+    padding: 10px;
+  }
+  button {
+    width: 100%;
+    font-size: 14px;
+    padding: 12px;
+  }
+}
+
+/* タブレット向け（600px～991px） */
+@media (min-width: 600px) and (max-width: 991px) {
+  button {
+    width: auto;
+    font-size: 15px;
+  }
+}
+
+/* PC向け（992px～） */
+@media (min-width: 992px) {
+  main {
+    max-width: 800px;
+    margin: auto;
+  }
 }
