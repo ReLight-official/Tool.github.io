@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>メニュー</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .grid-container {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+    @media (min-width: 768px) {
+      .grid-container {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+    @media (max-width: 767px) {
+      .grid-container {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="grid-container">
+    <button onclick="navigate('勤怠管理.html')">勤怠管理</button>
+    <button onclick="navigate('タケBotの亡骸.html')">リンク検索</button>
+    <button onclick="navigate('文章作成支援.html')">文章作成支援</button>
+    <button onclick="navigate('未実装1.html')">未実装1</button>
+    <button onclick="navigate('未実装2.html')">未実装2</button>
+    <button onclick="navigate('未実装3.html')">未実装3</button>
+    <button onclick="navigate('未実装4.html')">未実装4</button>
+    <button onclick="navigate('未実装5.html')">未実装5</button>
+    <button onclick="navigate('未実装6.html')">未実装6</button>
+    <button onclick="navigate('未実装7.html')">未実装7</button>
+    <button onclick="navigate('未実装8.html')">未実装8</button>
+    <button onclick="navigate('お気持ち表明.html')">お気持ち表明</button>
+  </main>
+  <script>
+    if (!localStorage.getItem('employeeData')) {
+      alert("社員証が未認証です。");
+      window.location.href = 'index.html';
+    }
+    function navigate(page) {
+      window.location.href = page;
+    }
+  </script>
+</body>
+</html>
