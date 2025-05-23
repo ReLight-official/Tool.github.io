@@ -1,30 +1,42 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>社員証インポート</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <main class="centered">
-    <h1>社員認証します</h1>
+    <h1>社員証ファイルをインポートしてください</h1>
     <input type="file" id="fileInput" accept=".json">
     <p id="status"></p>
   </main>
+
   <script>
+    function isValidID(id) {
+      return /^Re-Light\\d+$/.test(id);
+    }
+
+    function isValidName(name) {
+      return /^[A-Za-z ]+$/.test(name);
+    }
+
     document.getElementById('fileInput').addEventListener('change', function(event) {
       const file = event.target.files[0];
       if (!file) return;
+
       const reader = new FileReader();
       reader.onload = function(e) {
         try {
           const data = JSON.parse(e.target.result);
-          if (data && data.id && data.name) {
+          if (data && isValidID(data.id) && isValidName(data.name)) {
             localStorage.setItem('employeeData', JSON.stringify(data));
             document.getElementById('status').textContent = '認証成功。メニューに進みます…';
             setTimeout(() => window.location.href = 'menu.html', 1000);
-          } else { throw new Error(); }
+          } else {
+            throw new Error("invalid");
+          }
         } catch {
           document.getElementById('status').textContent = '無効な社員証ファイルです。';
         }
