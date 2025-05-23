@@ -14,13 +14,12 @@
   </main>
 
   <script>
-    function isValidID(id) {
-      return /^Re-Light_\\d+$/.test(id);
-    }
-
-    function isValidName(name) {
-      return /^[A-Za-z ]+$/.test(name);
-    }
+function isValidID(id) {
+  return /^Re-Light_\d+$/.test(id);
+}
+function isValidName(name) {
+  return /^[A-Za-z ]+$/.test(name);
+}
 
     document.getElementById('fileInput').addEventListener('change', function(event) {
       const file = event.target.files[0];
