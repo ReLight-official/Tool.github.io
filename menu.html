@@ -39,9 +39,10 @@
     <button onclick="navigate('お気持ち表明.html')">お気持ち表明</button>
   </main>
   <script>
-    if (!localStorage.getItem('employeeData')) {
-      alert("社員証が未認証です。");
-      window.location.href = 'index.html';
+    const data = JSON.parse(localStorage.getItem('employeeData') || 'null');
+    if (!data || !/^Re-Light_\d+$/.test(data.id) || !/^[A-Za-z ]+$/.test(data.name)) {
+      alert("未認証です。社員証をインポートしてください。");
+      window.location.href = "index.html";
     }
     function navigate(page) {
       window.location.href = page;
