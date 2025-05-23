@@ -23,6 +23,11 @@
     <button onclick="location.href='menu.html'">メニューに戻る</button>
   </footer>
   <script>
+        const data = JSON.parse(localStorage.getItem('employeeData') || 'null');
+    if (!data || !/^Re-Light_\d+$/.test(data.id) || !/^[A-Za-z ]+$/.test(data.name)) {
+      alert("未認証です。社員証をインポートしてください。");
+      window.location.href = "index.html";
+    }
     const sites = [
       { name: 'アニメイトタイムズ', url: 'https://www.animatetimes.com/' },
       { name: 'アニフォリオ', url: 'https://anifolio.app/' },
