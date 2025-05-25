@@ -14,20 +14,31 @@
             window.location.href = "index.html"; // 未認証の場合、index.htmlにリダイレクト
         }
 
+        // チェックするサイトのリスト
+        const sites = [
+            'https://www.animatetimes.com/',
+            'https://www.voicedb.net/',
+            'https://anime.eiga.com/'
+        ];
+
+        let lastContent = {};
+
         // サイト更新チェックの関数
-        let lastContent = '';
         function checkUpdate() {
-            fetch('https://example.com') // ここにチェックしたいURLを入れる
-                .then(response => response.text())
-                .then(data => {
-                    if (data !== lastContent) {
-                        lastContent = data;
-                        document.getElementById('updateStatus').innerText = 'サイトが更新されました!';
-                    }
-                });
+            sites.forEach(site => {
+                fetch(site)
+                    .then(response => response.text())
+                    .then(data => {
+                        if (lastContent[site] !== data) {
+                            lastContent[site] = data;
+                            document.getElementById('updateStatus').innerText += `\n${site} が更新されました!`;
+                        }
+                    });
+            });
         }
 
-        setInterval(checkUpdate, 10800000); // 3hごとに更新確認
+        // 5分（300,000ミリ秒）ごとに更新確認
+        setInterval(checkUpdate, 10800000); 
     </script>
 </head>
 <body>
