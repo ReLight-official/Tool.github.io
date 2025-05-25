@@ -1,25 +1,40 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta name="robots" content="noindex, nofollow">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>未実装1</title>
-  <link rel="stylesheet" href="style.css">
+    <meta name="robots" content="noindex, nofollow">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>サイト更新チェッカー</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        // ローカルストレージから社員データを取得し、認証をチェック
+        const data = JSON.parse(localStorage.getItem('employeeData') || 'null');
+        if (!data || !/^Re-Light_\d+$/.test(data.id) || !/^[A-Za-z ]+$/.test(data.name)) {
+            alert("未認証です。社員証をインポートしてください。");
+            window.location.href = "index.html"; // 未認証の場合、index.htmlにリダイレクト
+        }
+
+        // サイト更新チェックの関数
+        let lastContent = '';
+        function checkUpdate() {
+            fetch('https://example.com') // ここにチェックしたいURLを入れる
+                .then(response => response.text())
+                .then(data => {
+                    if (data !== lastContent) {
+                        lastContent = data;
+                        document.getElementById('updateStatus').innerText = 'サイトが更新されました!';
+                    }
+                });
+        }
+
+        setInterval(checkUpdate, 60000); // 1分ごとに更新確認
+    </script>
 </head>
 <body>
-  <main>
-    <h1>未実装1ページ</h1>
-  </main>
-  <footer>
+    <h1>サイト更新チェッカー</h1>
+    <p id="updateStatus">サイトの更新情報はここに表示されます。</p>
+
+    <!-- メニューに戻るボタン -->
     <button onclick="location.href='menu.html'">メニューに戻る</button>
-  </footer>
-    <script>
-    const data = JSON.parse(localStorage.getItem('employeeData') || 'null');
-    if (!data || !/^Re-Light_\d+$/.test(data.id) || !/^[A-Za-z ]+$/.test(data.name)) {
-      alert("未認証です。社員証をインポートしてください。");
-      window.location.href = "index.html";
-    }
-  </script>
 </body>
 </html>
